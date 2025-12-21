@@ -1,0 +1,39 @@
+---
+- name: Mini Deployment Demo – Install package and start service
+  hosts: localhost
+  gather_facts: true
+  become: true   # Needed to install packages and manage services
+  connection: local
+
+  vars:
+    app_name: "DemoApp"
+    environment: "lab"
+    package_name: "nginx"
+    service_name: "nginx"
+
+  tasks:
+    - name: Display deployment start message
+      ansible.builtin.debug:
+        msg:
+          - "Starting deployment of {{ app_name }}"
+          - "Environment: {{ environment }}"
+          - "Installing package: {{ package_name }}"
+
+    - name: Install required package
+      ansible.builtin.package:
+        name: "{{ package_name }}"
+        state: present
+
+    - name: Ensure the service is started and enabled
+      ansible.builtin.service:
+        name: "{{ service_name }}"
+        state: started
+        enabled: true
+
+    - name: Display deployment completion message
+      ansible.builtin.debug:
+        msg:
+          - "Deployment completed successfully!"
+          - "Package {{ package_name }} installed"
+          - "Service {{ service_name }} started and enabled"
+
