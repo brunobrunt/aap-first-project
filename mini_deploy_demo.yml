@@ -1,0 +1,42 @@
+---
+- name: Mini Deployment Demo – Safe AAP version
+  hosts: localhost
+  gather_facts: false
+  connection: local
+
+  vars:
+    app_name: "DemoApp"
+    environment: "lab"
+    deploy_dir: "/tmp/demo_app"
+
+  tasks:
+    - name: Show deployment start
+      ansible.builtin.debug:
+        msg:
+          - "Starting deployment of {{ app_name }}"
+          - "Environment: {{ environment }}"
+
+    - name: Create application directory
+      ansible.builtin.file:
+        path: "{{ deploy_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Deploy application file
+      ansible.builtin.copy:
+        content: |
+          Application: {{ app_name }}
+          Environment: {{ environment }}
+          Deployed via AAP
+        dest: "{{ deploy_dir }}/app.txt"
+
+    - name: Verify deployment
+      ansible.builtin.stat:
+        path: "{{ deploy_dir }}/app.txt"
+      register: app_file
+
+    - name: Deployment success message
+      ansible.builtin.debug:
+        msg: "Deployment completed successfully!"
+      when: app_file.stat.exists
+
