@@ -7,6 +7,10 @@
   vars:
     app_name: "Ansible Automation Platform"
     environment: "lab"
+    version: "1.0.0"
+    packages_to_install:
+      - git
+      - curl
 
   tasks:
     - name: Display welcome message
@@ -14,5 +18,26 @@
         msg:
           - "Welcome to {{ app_name }}"
           - "Environment: {{ environment }}"
+          - "Version: {{ version }}"
           - "Playbook executed successfully via AAP"
 
+    - name: Show deployment plan
+      ansible.builtin.debug:
+        msg:
+          - "The following packages would be installed:"
+          - "{{ packages_to_install }}"
+
+    - name: Simulate creating deployment directory
+      ansible.builtin.file:
+        path: "/tmp/{{ app_name | lower | replace(' ', '_') }}"
+        state: directory
+        mode: '0755'
+
+    - name: Simulate copying application files
+      ansible.builtin.copy:
+        content: "This is a demo app file for {{ app_name }} version {{ version }}."
+        dest: "/tmp/{{ app_name | lower | replace(' ', '_') }}/app.txt"
+
+    - name: Simulate starting application service
+      ansible.builtin.debug:
+        msg: "Application {{ app_name }} would be started here (demo only)"
