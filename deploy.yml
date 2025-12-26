@@ -1,0 +1,40 @@
+---
+- name: AAP Localhost Deployment Demo
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true
+
+  vars:
+    demo_package: httpd
+    demo_service: httpd
+    environment: lab
+
+  tasks:
+    - name: Show environment info
+      ansible.builtin.debug:
+        msg:
+          - "Running in environment: {{ environment }}"
+          - "Ansible version: {{ ansible_version.full }}"
+          - "Python version: {{ ansible_python_version }}"
+
+    - name: Install required package
+      ansible.builtin.dnf:
+        name: "{{ demo_package }}"
+        state: present
+
+    - name: Ensure service is enabled and started
+      ansible.builtin.service:
+        name: "{{ demo_service }}"
+        state: started
+        enabled: true
+
+    - name: Confirm service status
+      ansible.builtin.command: systemctl status {{ demo_service }}
+      register: service_status
+      changed_when: false
+
+    - name: Display service status
+      ansible.builtin.debug:
+        var: service_status.stdout_lines
+
