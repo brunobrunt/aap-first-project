@@ -1,14 +1,13 @@
 ---
 - name: AAP Remote Deployment Demo (RHEL 9)
   hosts: all
-  connection: local
   gather_facts: true
   become: true
 
   vars:
     demo_package: httpd
     demo_service: httpd
-    environment: lab
+    deploy_env: lab
 
   tasks:
     - name: Display target host info
@@ -16,7 +15,7 @@
         msg:
           - "Target host: {{ inventory_hostname }}"
           - "OS: {{ ansible_distribution }} {{ ansible_distribution_major_version }}"
-          - "Running in environment: {{ environment }}"
+          - "Deploy environment: {{ deploy_env }}"
           - "Ansible version: {{ ansible_version.full }}"
           - "Python version: {{ ansible_python_version }}"
 
@@ -32,12 +31,11 @@
         enabled: true
 
     - name: Confirm service status
-      ansible.builtin.command: systemctl status {{ demo_service }}
+      ansible.builtin.command: systemctl is-active {{ demo_service }}
       register: service_status
       changed_when: false
 
     - name: Display service status
       ansible.builtin.debug:
-        msg: "Service {{ demo_service }} state: {{ service_state.stdout }}"
-        var: service_status.stdout_lines
+        msg: "Service {{ demo_service }} is {{ service_status.stdout }}"
 
