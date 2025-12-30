@@ -1,0 +1,11 @@
+- name: Install nginx via Satellite content
+  ansible.builtin.dnf:
+    name: nginx
+    state: present
+
+- name: Enable and start nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+

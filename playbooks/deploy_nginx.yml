@@ -1,0 +1,7 @@
+---
+- name: Deploy nginx on RHEL hosts
+  hosts: all
+  become: true
+
+  roles:
+    - nginx
