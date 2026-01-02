@@ -1,0 +1,16 @@
+---
+- name: Install tuned
+  ansible.builtin.dnf:
+    name: tuned
+    state: present
+
+- name: Enable and start tuned
+  ansible.builtin.service:
+    name: tuned
+    state: started
+    enabled: true
+
+- name: Set tuned profile to balanced
+  ansible.builtin.command: tuned-adm profile balanced
+  changed_when: false
+

@@ -1,16 +1,29 @@
+#---
+#- name: Deploy services using Satellite-managed repos
+#  hosts: all
+#  become: true
+#  gather_facts: true
+#
+#  roles:
+#    - role: nginx
+#      when: ansible_distribution_major_version in ['8', '9']
+#
+#    - role: chrony
+#      when: ansible_distribution_major_version == '8'
+#
+#    - role: rsyslog
+#      when: ansible_distribution_major_version == '9'#
+
 ---
-- name: Deploy services using Satellite-managed repos
+- name: Deploy core services on RHEL 8 and 9
   hosts: all
   become: true
   gather_facts: true
 
   roles:
-    - role: nginx
-      when: ansible_distribution_major_version in ['8', '9']
-
-    - role: chrony
-      when: ansible_distribution_major_version == '8'
-
-    - role: rsyslog
-      when: ansible_distribution_major_version == '9'
+    - chrony
+    - rsyslog
+    - nginx
+    - firewalld
+    - tuned
 
