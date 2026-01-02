@@ -13,10 +13,11 @@
     name: firewalld
     state: started
     enabled: true
-
 - name: Open HTTP port for nginx
-  firewalld:  # Use the BUILT-IN module
-    service: http
-    permanent: true
-    state: enabled
-    immediate: true
+  ansible.builtin.shell:
+    cmd: |
+      firewall-cmd --permanent --add-service=http
+      firewall-cmd --reload
+    become: yes
+  register: firewall_result
+  changed_when: "'already' not in firewall_result.stdout"
