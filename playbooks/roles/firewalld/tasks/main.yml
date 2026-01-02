@@ -1,4 +1,8 @@
 ---
+- name: Install ansible.posix collection
+  ansible.builtin.command:
+    cmd: ansible-galaxy collection install ansible.posix
+
 - name: Install firewalld
   ansible.builtin.dnf:
     name: firewalld
