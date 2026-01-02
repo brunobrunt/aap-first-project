@@ -15,7 +15,7 @@
     enabled: true
 
 - name: Open HTTP port for nginx
-  ansible.builtin.firewalld:  # Use the BUILT-IN module
+  firewalld:  # Use the BUILT-IN module
     service: http
     permanent: true
     state: enabled
