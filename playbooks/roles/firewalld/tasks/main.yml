@@ -15,7 +15,7 @@
     enabled: true
 
 - name: Open HTTP port for nginx
-  community.general.firewalld:  # Try community.general instead
+  ansible.builtin.firewalld:  # Use the BUILT-IN module
     service: http
     permanent: true
     state: enabled
