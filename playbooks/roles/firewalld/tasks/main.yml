@@ -1,8 +1,5 @@
 ---
-- name: Install ansible.posix collection
-  ansible.builtin.command:
-    cmd: ansible-galaxy collection install ansible.posix
-
+---
 - name: Install firewalld
   ansible.builtin.dnf:
     name: firewalld
@@ -13,11 +10,17 @@
     name: firewalld
     state: started
     enabled: true
+
 - name: Open HTTP port for nginx
-  ansible.builtin.shell:
-    cmd: |
-      firewall-cmd --permanent --add-service=http
-      firewall-cmd --reload
-    become: yes
-  register: firewall_result
-  changed_when: "'already' not in firewall_result.stdout"
+  ansible.posix.firewalld:  # ← This will now work!
+    service: http
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Open HTTPS port for nginx
+  ansible.posix.firewalld:
+    service: https
+    permanent: true
+    state: enabled
+    immediate: true
