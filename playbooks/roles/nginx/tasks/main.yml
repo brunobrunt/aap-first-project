@@ -1,11 +1,23 @@
 ---
 # Stop Apache if running (port 80 conflict)
+#- name: Stop and disable httpd if present
+ # ansible.builtin.service:
+  #  name: httpd
+   # state: stopped
+    #enabled: false
+ # ignore_errors: yes
+
+- name: Check if httpd is installed
+  ansible.builtin.stat:
+    path: /usr/sbin/httpd
+  register: httpd_binary
+
 - name: Stop and disable httpd if present
   ansible.builtin.service:
     name: httpd
     state: stopped
     enabled: false
-  ignore_errors: true
+  when: httpd_binary.stat.exists
 
 - name: Install nginx via Satellite content
   ansible.builtin.package:
